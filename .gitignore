@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+
+# Models / data
+data/*.csv
+data/*.parquet
+data/raw/
+*.pkl
+*.joblib
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Build
+dist/
+build/
+*.log
