@@ -25,10 +25,14 @@ LANG_MAP = {
     "bengali": "Bengali (Bengali script)",
 }
 
+# Capital-gain is excluded by design: ₹-equivalent deltas (lakhs of rupees in
+# stock-market gains) are not a realistic recourse for the Indian small-shop
+# / informal-sector persona this product serves. We restrict the search to
+# features the affected citizen could plausibly act on or that surface a
+# structural barrier the regulator should address.
 NUMERIC_FLIP_DELTAS = {
     "education_num": [1, 2, 3, 4],
     "hours_per_week": [5, 10, 15],
-    "capital_gain": [1000, 5000, 10000],
     "age": [3, 5, 10],
 }
 
@@ -178,23 +182,52 @@ def render_explanation(
         f"first name. Lead with the strongest counterfactual. Two to four short "
         f"sentences."
     )
-    try:
-        client = genai.Client(api_key=api_key)
-        model_name = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
-        resp = client.models.generate_content(
-            model=model_name,
-            contents=user_prompt,
-            config=types.GenerateContentConfig(
-                system_instruction=SYSTEM_PROMPT,
-                temperature=0.4,
-                max_output_tokens=400,
-            ),
-        )
-        return (resp.text or "").strip() or _fallback_explanation(
-            applicant, counterfactuals, language
-        )
-    except Exception as exc:
-        return _fallback_explanation(applicant, counterfactuals, language, error=str(exc))
+    client = genai.Client(api_key=api_key)
+    model_name = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+    config = types.GenerateContentConfig(
+        system_instruction=SYSTEM_PROMPT,
+        temperature=0.4,
+        max_output_tokens=1024,
+        # Disable Gemini 2.5 Flash thinking tokens — short empathetic
+        # responses don't need internal reasoning and the thinking budget
+        # was eating our token budget, truncating the visible output.
+        thinking_config=types.ThinkingConfig(thinking_budget=0),
+    )
+    import time
+    last_exc: Exception | None = None
+    backoffs = [0, 2, 5]  # immediate, +2s, +5s
+    for delay in backoffs:
+        if delay:
+            time.sleep(delay)
+        try:
+            resp = client.models.generate_content(
+                model=model_name,
+                contents=user_prompt,
+                config=config,
+            )
+            text = (resp.text or "").strip()
+            if text:
+                return text
+        except Exception as exc:
+            last_exc = exc
+            msg = str(exc)
+            # Retry on transient errors: enablement propagation lag, model
+            # overload (503), rate limit (429), quota (RESOURCE_EXHAUSTED).
+            transient = (
+                "SERVICE_DISABLED" in msg
+                or "has not been used" in msg
+                or "UNAVAILABLE" in msg
+                or "503" in msg
+                or "429" in msg
+                or "RESOURCE_EXHAUSTED" in msg
+            )
+            if transient:
+                continue
+            break
+    return _fallback_explanation(
+        applicant, counterfactuals, language,
+        error=str(last_exc) if last_exc else None,
+    )
 
 
 def _fallback_explanation(
