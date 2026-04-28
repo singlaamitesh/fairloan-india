@@ -8,18 +8,25 @@ Two tabs:
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
+
+# Make this file work both as a package module (python -m src.app) and as a
+# top-level script (streamlit run src/app.py). The latter is what Cloud Run
+# executes, and Python won't recognise `src` as a package without sys.path help.
+_PARENT = Path(__file__).resolve().parent.parent
+if str(_PARENT) not in sys.path:
+    sys.path.insert(0, str(_PARENT))
 
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
 import streamlit as st
 from dotenv import load_dotenv
 
-from . import audit as audit_mod
-from . import counterfactual as cf_mod
-from . import personas
-from . import train as train_mod
+from src import audit as audit_mod
+from src import counterfactual as cf_mod
+from src import personas
+from src import train as train_mod
 
 load_dotenv()
 
