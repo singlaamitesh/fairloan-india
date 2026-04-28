@@ -55,8 +55,12 @@ Secondary persona — **Rohan, data journalist at The Ken / Rest of World**, who
 ### Audit Dashboard
 Slice-level approval-rate heatmap by sex, race, age band, education band, city tier. Fairlearn-computed Demographic Parity Difference (DPD) and Equalized Odds Difference (EOD) per slice. Built for journalists, regulators, and ombudsmen.
 
+![Audit dashboard — slice-level disparities + 5 visual approval-rate charts](../assets/screenshots/01_audit_dashboard.png)
+
 ### Citizen Lookup
 Pick any denied applicant. FairLoan finds single-feature changes that flip the model's prediction (every change verified against the actual classifier — **no hallucinated fixes**), then asks **Gemini 2.5 Flash** to render a 2-4 sentence empathetic explanation in **Hindi, Tamil, Bengali, or English**.
+
+![Citizen Lookup — Smita Reddy denied · 3 validated counterfactuals · Hindi explanation rendered by Gemini](../assets/screenshots/02_citizen_hindi.png)
 
 ### About
 Methodology, dataset, SDG mapping, partner roadmap.
