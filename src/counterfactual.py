@@ -236,17 +236,24 @@ def _fallback_explanation(
     language: str,
     error: str | None = None,
 ) -> str:
-    """Plain-English fallback when Gemini is unavailable."""
-    name = applicant.get("display_name", "Applicant")
+    """Plain-English fallback when Gemini is unavailable.
+
+    Never expose raw Gemini error JSON to users; surface a calm sentence and
+    ship the audit result. The technical error is still observable in server
+    logs via the calling code.
+    """
+    name = str(applicant.get("display_name", "Applicant")).split()[0] or "Applicant"
     if not counterfactuals:
         return _no_counterfactual_message(language)
     top = counterfactuals[0]
-    note = f" (Gemini unreachable: {error})" if error else ""
-    return (
-        f"{name}, the model denied your application based on the patterns it "
-        f"learned. According to the audit, you would have been approved with "
-        f"{top.explanation_human}.{note}"
-    )
+    parts = [
+        f"{name}, the model denied your application based on the patterns it learned.",
+        f"According to the audit, the model would have approved you with {top.explanation_human}.",
+    ]
+    if len(counterfactuals) > 1:
+        second = counterfactuals[1]
+        parts.append(f"{second.explanation_human.capitalize()} would also have led to approval.")
+    return " ".join(parts)
 
 
 def _no_counterfactual_message(language: str) -> str:
