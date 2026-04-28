@@ -3,6 +3,9 @@
 > **Bias audit + vernacular counterfactual explanations for Indian digital lending.**
 > Submitted to [Google Solution Challenge 2026 — India](https://hack2skill.com/event/solution-challenge-2026) · Theme 4 (Unbiased AI Decision) · SDG 5 + 10 + 16.
 
+🔗 **Live demo:** https://fairloan-india-1052192887679.asia-south1.run.app
+📦 **Source:** https://github.com/singlaamitesh/fairloan-india
+
 Indian digital-lending apps approve or deny instant loans in seconds using ML
 classifiers. RBI's 2021 Working Group on Digital Lending and several public
 investigations have documented systematic disparities by gender, region, and

@@ -167,9 +167,9 @@ Built in 12 hours with Google AI tooling. Submitted to Google Solution Challenge
 
 ## Links
 
-- **Live prototype:** *(Cloud Run URL — to be inserted after deploy)*
+- **Live prototype:** https://fairloan-india-1052192887679.asia-south1.run.app
 - **GitHub repo:** https://github.com/singlaamitesh/fairloan-india
-- **Demo video:** *(YouTube unlisted URL — to be inserted)*
+- **Demo video:** *(YouTube unlisted URL — to be inserted after recording)*
 - **MIT licensed.** Public dataset. Reproducible.
 
 > Indian credit decisions affect 1.4 billion people. They deserve to know why.
