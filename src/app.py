@@ -73,7 +73,11 @@ def render_masthead(metadata: dict) -> None:
     silently affect.
   </p>
   <p class="fl-byline">
-    Filed by FairLoan India · Theme 4, Unbiased AI Decision · SDG 5 · 10 · 16
+    <span class="fl-dateline">Bandra · Bhilwara · New Delhi</span>
+    <span>Filed by FairLoan India</span>
+    <span class="fl-byline-rule"></span>
+    <span>Theme 4 · Unbiased AI Decision</span>
+    <span>SDG 5 · 10 · 16</span>
   </p>
 </div>
 """
@@ -96,7 +100,7 @@ def render_masthead(metadata: dict) -> None:
   </div>
   <div class="fl-kpi">
     <div class="fl-kpi-label">Languages</div>
-    <div class="fl-kpi-value">हि · த · বং · EN</div>
+    <div class="fl-kpi-value scripts">हि · த · বং · EN</div>
   </div>
 </div>
 """
